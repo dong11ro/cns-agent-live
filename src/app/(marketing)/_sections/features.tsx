@@ -1,6 +1,6 @@
 import { type Feature, FeatureItem } from "@/components/molecules/feature-item";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import { tones } from "@/lib/tones";
+import { toneAt } from "@/lib/tones";
 
 export function Features({ features }: { features: Feature[] }) {
   return (
@@ -16,7 +16,7 @@ export function Features({ features }: { features: Feature[] }) {
         />
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {features.map((feature, i) => (
-            <FeatureItem key={feature.title} {...feature} tone={tones[i % tones.length]} />
+            <FeatureItem key={feature.title} {...feature} tone={toneAt(i)} />
           ))}
         </div>
       </div>

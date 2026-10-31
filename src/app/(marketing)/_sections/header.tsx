@@ -8,7 +8,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
     <header className="sticky top-0 z-50 px-4 pt-3">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border bg-background/80 pr-2 pl-4 shadow-lg shadow-primary/5 backdrop-blur">
         <a href="#" className="flex items-center gap-2 font-heading text-xl">
-          <span className="flex size-9 -rotate-6 items-center justify-center rounded-2xl bg-linear-to-br from-primary to-chart-1 text-primary-foreground shadow-md">
+          <span className="flex size-9 -rotate-6 items-center justify-center rounded-2xl bg-linear-to-br gradient-brand text-primary-foreground shadow-md">
             <GraduationCap className="size-5" />
           </span>
           넥스트스텝
@@ -28,7 +28,7 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
           href="#apply"
           className={cn(
             buttonVariants(),
-            "h-10 rounded-full bg-linear-to-r from-primary to-chart-1 px-5 font-bold shadow-md shadow-primary/30 hover:opacity-90",
+            "h-10 rounded-full bg-linear-to-r gradient-brand px-5 font-bold shadow-md shadow-primary/30 hover:opacity-90",
           )}
         >
           수강 신청

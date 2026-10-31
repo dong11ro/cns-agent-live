@@ -1,6 +1,6 @@
 import { type Review, ReviewCard } from "@/components/molecules/review-card";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import { tones } from "@/lib/tones";
+import { toneAt } from "@/lib/tones";
 
 export function Reviews({ reviews }: { reviews: Review[] }) {
   return (
@@ -12,7 +12,7 @@ export function Reviews({ reviews }: { reviews: Review[] }) {
       />
       <div className="mt-12 grid gap-6 md:grid-cols-3">
         {reviews.map((review, i) => (
-          <ReviewCard key={review.name} {...review} tone={tones[i % tones.length]} />
+          <ReviewCard key={review.name} {...review} tone={toneAt(i)} />
         ))}
       </div>
     </section>

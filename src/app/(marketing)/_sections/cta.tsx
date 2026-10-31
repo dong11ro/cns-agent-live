@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export function Cta() {
   return (
     <section id="apply" className="scroll-mt-20 px-4 pb-24">
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-linear-to-br from-primary via-chart-1 to-chart-2 px-6 py-16 text-center text-primary-foreground shadow-2xl shadow-primary/30 md:py-20">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-linear-to-br gradient-brand-vivid px-6 py-16 text-center text-primary-foreground shadow-2xl shadow-primary/30 md:py-20">
         <Sticker className="top-6 left-8 -rotate-12 text-5xl">🚀</Sticker>
         <Sticker className="right-10 bottom-6 rotate-12 text-5xl motion-safe:animate-bounce">🙌</Sticker>
         <h2 className="font-heading text-4xl md:text-5xl">지금 바로 시작하세요</h2>

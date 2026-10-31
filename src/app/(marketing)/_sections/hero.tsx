@@ -21,14 +21,14 @@ export function Hero() {
         🔥
       </Sticker>
       <div className="mx-auto max-w-6xl px-4 py-24 text-center md:py-32">
-        <Badge className="mb-6 h-auto -rotate-2 rounded-full border-2 border-foreground bg-accent px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-[3px_3px_0_0_var(--foreground)]">
+        <Badge className="mb-6 h-auto -rotate-2 rounded-full border-2 border-foreground bg-accent px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-hard-sm">
           <span aria-hidden>🎉</span>
           2027년 1기 모집 중 · 얼리버드 ~ 11/30
         </Badge>
         <h1 className="mx-auto max-w-3xl font-heading text-5xl leading-tight md:text-7xl">
           코드로 여는
           <br />
-          <span className="bg-linear-to-r from-primary via-chart-1 to-chart-2 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r gradient-brand-vivid bg-clip-text text-transparent">
             당신의 다음 커리어
           </span>
         </h1>
@@ -42,7 +42,7 @@ export function Hero() {
             href="#courses"
             className={cn(
               buttonVariants({ size: "lg" }),
-              "h-13 rounded-full bg-linear-to-r from-primary to-chart-1 px-8 text-base font-bold shadow-xl shadow-primary/30 transition-transform hover:-translate-y-0.5 hover:opacity-95",
+              "h-13 rounded-full bg-linear-to-r gradient-brand px-8 text-base font-bold shadow-xl shadow-primary/30 transition-transform hover:-translate-y-0.5 hover:opacity-95",
             )}
           >
             교육과정 보기 <ArrowRight />
@@ -51,7 +51,7 @@ export function Hero() {
             href="#apply"
             className={cn(
               buttonVariants({ size: "lg", variant: "outline" }),
-              "h-13 rounded-full border-2 border-foreground px-8 text-base font-bold shadow-[4px_4px_0_0_var(--foreground)] transition-transform hover:-translate-y-0.5",
+              "h-13 rounded-full border-2 border-foreground px-8 text-base font-bold shadow-hard transition-transform hover:-translate-y-0.5",
             )}
           >
             무료 상담 신청

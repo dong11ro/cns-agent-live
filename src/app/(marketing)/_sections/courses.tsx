@@ -1,6 +1,6 @@
 import { type Course, CourseCard } from "@/components/molecules/course-card";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import { tones } from "@/lib/tones";
+import { toneAt } from "@/lib/tones";
 
 const stickers = ["🚀", "💡", "☁️"];
 
@@ -17,7 +17,7 @@ export function Courses({ courses }: { courses: Course[] }) {
           <CourseCard
             key={course.title}
             {...course}
-            tone={tones[i % tones.length]}
+            tone={toneAt(i)}
             sticker={stickers[i % stickers.length]}
           />
         ))}

@@ -10,7 +10,7 @@ export function ReviewCard({ quote, name, role, tone }: Review & { tone: Tone })
   return (
     <Card
       className={cn(
-        "rounded-3xl border-2 border-foreground shadow-[5px_5px_0_0_var(--foreground)] ring-0 transition-transform hover:rotate-0",
+        "rounded-3xl border-2 border-foreground shadow-hard-lg ring-0 transition-transform hover:rotate-0",
         tone.rotate,
       )}
     >

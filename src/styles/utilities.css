@@ -1,0 +1,8 @@
+/* 브랜드 그라데이션 색 조합. 방향은 bg-linear-to-* 로 따로 준다 */
+@utility gradient-brand {
+  @apply from-primary to-chart-1;
+}
+
+@utility gradient-brand-vivid {
+  @apply from-primary via-chart-1 to-chart-2;
+}
