@@ -1,6 +1,5 @@
-import { CourseCard } from "@/components/molecules/course-card";
+import { type Course, CourseCard } from "@/components/molecules/course-card";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import type { Course } from "@/content/landing";
 import { tones } from "@/lib/tones";
 
 const stickers = ["🚀", "💡", "☁️"];

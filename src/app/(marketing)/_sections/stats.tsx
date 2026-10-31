@@ -1,5 +1,4 @@
-import { StatTile } from "@/components/molecules/stat-tile";
-import type { Stat } from "@/content/landing";
+import { type Stat, StatTile } from "@/components/molecules/stat-tile";
 import { tones } from "@/lib/tones";
 
 export function Stats({ stats }: { stats: Stat[] }) {

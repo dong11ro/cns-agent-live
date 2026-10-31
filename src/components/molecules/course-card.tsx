@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import { Sticker } from "@/components/atoms/sticker";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,9 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Course } from "@/content/landing";
 import type { Tone } from "@/lib/tones";
 import { cn } from "@/lib/utils";
+
+export type Course = {
+  icon: LucideIcon;
+  badge: string;
+  title: string;
+  description: string;
+  meta: string;
+};
 
 export function CourseCard({
   icon: Icon,

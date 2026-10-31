@@ -1,7 +1,6 @@
-import { FaqItem } from "@/components/molecules/faq-item";
+import { type Faq as FaqEntry, FaqItem } from "@/components/molecules/faq-item";
 import { SectionHeading } from "@/components/molecules/section-heading";
 import { Accordion } from "@/components/ui/accordion";
-import type { Faq as FaqEntry } from "@/content/landing";
 
 export function Faq({ faqs }: { faqs: FaqEntry[] }) {
   return (

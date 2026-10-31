@@ -1,6 +1,5 @@
-import { ReviewCard } from "@/components/molecules/review-card";
+import { type Review, ReviewCard } from "@/components/molecules/review-card";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import type { Review } from "@/content/landing";
 import { tones } from "@/lib/tones";
 
 export function Reviews({ reviews }: { reviews: Review[] }) {

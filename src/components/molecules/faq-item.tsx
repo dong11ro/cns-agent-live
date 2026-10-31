@@ -1,5 +1,6 @@
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { Faq } from "@/content/landing";
+
+export type Faq = { q: string; a: string };
 
 export function FaqItem({ q, a }: Faq) {
   return (

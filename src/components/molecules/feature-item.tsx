@@ -1,6 +1,8 @@
-import type { Feature } from "@/content/landing";
+import type { LucideIcon } from "lucide-react";
 import type { Tone } from "@/lib/tones";
 import { cn } from "@/lib/utils";
+
+export type Feature = { icon: LucideIcon; title: string; description: string };
 
 export function FeatureItem({ icon: Icon, title, description, tone }: Feature & { tone: Tone }) {
   return (

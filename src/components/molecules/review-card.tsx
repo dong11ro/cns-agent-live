@@ -1,9 +1,10 @@
 import { Quote } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { Review } from "@/content/landing";
 import type { Tone } from "@/lib/tones";
 import { cn } from "@/lib/utils";
+
+export type Review = { quote: string; name: string; role: string };
 
 export function ReviewCard({ quote, name, role, tone }: Review & { tone: Tone }) {
   return (

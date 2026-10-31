@@ -1,6 +1,5 @@
-import { FeatureItem } from "@/components/molecules/feature-item";
+import { type Feature, FeatureItem } from "@/components/molecules/feature-item";
 import { SectionHeading } from "@/components/molecules/section-heading";
-import type { Feature } from "@/content/landing";
 import { tones } from "@/lib/tones";
 
 export function Features({ features }: { features: Feature[] }) {

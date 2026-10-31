@@ -5,21 +5,14 @@ import {
   Code2,
   GraduationCap,
   Users,
-  type LucideIcon,
 } from "lucide-react";
+import type { Course } from "@/components/molecules/course-card";
+import type { Faq } from "@/components/molecules/faq-item";
+import type { Feature } from "@/components/molecules/feature-item";
+import type { Review } from "@/components/molecules/review-card";
+import type { Stat } from "@/components/molecules/stat-tile";
 
 export type NavItem = { href: string; label: string };
-export type Stat = { value: string; label: string };
-export type Course = {
-  icon: LucideIcon;
-  badge: string;
-  title: string;
-  description: string;
-  meta: string;
-};
-export type Feature = { icon: LucideIcon; title: string; description: string };
-export type Review = { quote: string; name: string; role: string };
-export type Faq = { q: string; a: string };
 
 export const navItems: NavItem[] = [
   { href: "#courses", label: "교육과정" },

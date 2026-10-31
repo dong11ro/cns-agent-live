@@ -1,6 +1,7 @@
-import type { Stat } from "@/content/landing";
 import type { Tone } from "@/lib/tones";
 import { cn } from "@/lib/utils";
+
+export type Stat = { value: string; label: string };
 
 export function StatTile({ value, label, tone }: Stat & { tone: Tone }) {
   return (

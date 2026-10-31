@@ -1,7 +1,7 @@
 import { GraduationCap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import type { NavItem } from "@/content/landing";
 import { cn } from "@/lib/utils";
+import type { NavItem } from "../_content";
 
 export function Header({ navItems }: { navItems: NavItem[] }) {
   return (
