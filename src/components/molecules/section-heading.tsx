@@ -1,12 +1,10 @@
-export function SectionHeading({
-  eyebrow,
-  title,
-  description,
-}: {
+export type SectionHeadingProps = {
   eyebrow: string;
   title: string;
   description?: string;
-}) {
+};
+
+export function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
   return (
     <div className="text-center">
       <div className="inline-flex -rotate-2 rounded-full bg-accent px-4 py-1 text-sm font-bold text-accent-foreground">

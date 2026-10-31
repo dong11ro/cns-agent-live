@@ -1,4 +1,4 @@
-import { courses, faqs, features, navItems, reviews, stats } from "./_content";
+import { courses, faq, features, navItems, reviews, stats } from "./_content";
 import { Courses } from "./_sections/courses";
 import { Cta } from "./_sections/cta";
 import { Faq } from "./_sections/faq";
@@ -17,10 +17,10 @@ export default function LandingPage() {
       <main className="flex-1">
         <Hero />
         <Stats stats={stats} />
-        <Courses courses={courses} />
-        <Features features={features} />
-        <Reviews reviews={reviews} />
-        <Faq faqs={faqs} />
+        <Courses {...courses} />
+        <Features {...features} />
+        <Reviews {...reviews} />
+        <Faq {...faq} />
         <Cta />
       </main>
       <Footer />

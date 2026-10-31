@@ -1,25 +1,15 @@
 import { type Course, CourseCard } from "@/components/molecules/course-card";
 import { SectionHeading } from "@/components/molecules/section-heading";
 import { toneAt } from "@/lib/tones";
+import type { Section } from "../_content";
 
-const stickers = ["🚀", "💡", "☁️"];
-
-export function Courses({ courses }: { courses: Course[] }) {
+export function Courses({ heading, items }: Section<Course>) {
   return (
     <section id="courses" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-24">
-      <SectionHeading
-        eyebrow="교육과정"
-        title="목표에 맞는 과정을 선택하세요"
-        description="입문부터 재직자 심화까지, 현업에서 바로 쓰는 기술만 담았습니다."
-      />
+      <SectionHeading {...heading} />
       <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {courses.map((course, i) => (
-          <CourseCard
-            key={course.title}
-            {...course}
-            tone={toneAt(i)}
-            sticker={stickers[i % stickers.length]}
-          />
+        {items.map((course, i) => (
+          <CourseCard key={course.title} {...course} tone={toneAt(i)} />
         ))}
       </div>
     </section>

@@ -19,6 +19,7 @@ export type Course = {
   title: string;
   description: string;
   meta: string;
+  sticker: string;
 };
 
 export function CourseCard({
@@ -29,7 +30,7 @@ export function CourseCard({
   meta,
   tone,
   sticker,
-}: Course & { tone: Tone; sticker: string }) {
+}: Course & { tone: Tone }) {
   return (
     <Card className="relative rounded-3xl ring-2 ring-foreground/10 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 hover:ring-primary">
       <Sticker className="top-4 right-20 text-2xl">{sticker}</Sticker>
