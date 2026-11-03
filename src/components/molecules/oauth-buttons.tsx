@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
-export type OAuthButton = { id: "kakao" | "google"; label: string; enabled: boolean; connected?: boolean }
+export type OAuthButton = { id: "kakao" | "google"; label: string; enabled: boolean }
 
 // 각 제공자 브랜드 가이드의 버튼 색(카카오 #FEE500 배경 + 85% 검정 글자, Google 흰 배경 + 테두리)
 const STYLE = {

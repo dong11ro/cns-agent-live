@@ -4,7 +4,9 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { ObjectId } from "mongodb"
 import { collections, type UserDoc } from "@/lib/db/collections"
+import { getConsents } from "./consents"
 import { COOKIE } from "./session"
+import type { TermId } from "./terms"
 import { verifyAccessToken } from "./tokens"
 
 /** 클라이언트로 넘겨도 되는 좁은 사용자 정보. 해시·tokenVersion은 절대 넣지 않는다. */
@@ -57,4 +59,21 @@ export async function requireUserDoc(): Promise<UserDoc> {
   const user = await getCurrentUserDoc()
   if (!user) redirect("/login")
   return user
+}
+
+/** 마이페이지: 내 연결 계정(표시용 필드만) */
+export async function getMyLinkedAccounts() {
+  const user = await requireUserDoc()
+  const { accounts } = await collections()
+  const docs = await accounts.find({ userId: user._id }).toArray()
+  return docs.map((a) => ({ provider: a.provider, email: a.email, linkedAt: a.linkedAt.toISOString() }))
+}
+
+/** 마이페이지: 약관별 현재 동의 상태 */
+export async function getMyConsents() {
+  const user = await requireUserDoc()
+  const consents = await getConsents(user._id)
+  return Object.fromEntries(
+    Object.entries(consents).map(([id, c]) => [id, c && { agreed: c.agreed, version: c.version, at: c.at.toISOString() }]),
+  ) as Record<TermId, { agreed: boolean; version: string; at: string } | null>
 }
