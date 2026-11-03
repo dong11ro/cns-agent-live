@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { GraduationCap } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { NavItem } from "../_content";
+import { AccountSlot, LoginLink } from "./account-slot";
 
 export function Header({ navItems }: { navItems: NavItem[] }) {
   return (
@@ -24,15 +26,20 @@ export function Header({ navItems }: { navItems: NavItem[] }) {
             </a>
           ))}
         </nav>
-        <a
-          href="#apply"
-          className={cn(
-            buttonVariants(),
-            "h-10 rounded-full bg-linear-to-r gradient-brand px-5 font-bold shadow-md shadow-primary/30 hover:opacity-90",
-          )}
-        >
-          수강 신청
-        </a>
+        <div className="flex items-center gap-1">
+          <Suspense fallback={<LoginLink />}>
+            <AccountSlot />
+          </Suspense>
+          <a
+            href="#apply"
+            className={cn(
+              buttonVariants(),
+              "h-10 rounded-full bg-linear-to-r gradient-brand px-5 font-bold shadow-md shadow-primary/30 hover:opacity-90",
+            )}
+          >
+            수강 신청
+          </a>
+        </div>
       </div>
     </header>
   );
