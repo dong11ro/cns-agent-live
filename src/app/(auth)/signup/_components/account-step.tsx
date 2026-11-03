@@ -28,11 +28,13 @@ function validate(name: string, form: HTMLFormElement) {
 }
 
 /** 값은 상위(위저드)가 들고 있어 이전 단계로 갔다 와도 유지된다. 제출은 signup 액션 한 번. */
-export function AccountStep({ values, onValues, agreements, next }: {
+export function AccountStep({ values, onValues, agreements, next, onVerify }: {
   values: AccountValues
   onValues: (v: AccountValues) => void
   agreements: Agreements
   next: string
+  /** 검증 플래그 on이면 가입 후 redirect 대신 ok가 와서 인증 단계로 넘어간다 */
+  onVerify: () => void
 }) {
   const [state, formAction, pending] = useActionState(signup, {} as FormState)
   const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate)
@@ -41,6 +43,9 @@ export function AccountStep({ values, onValues, agreements, next }: {
 
   // 제출을 startTransition으로 하므로 React의 폼 자동 리셋이 없고, 값은 클라이언트 상태에만 있다(서버로 비밀번호를 되돌려 받지 않음)
   useEffect(() => () => clearTimeout(timer.current), [])
+  useEffect(() => {
+    if (state.ok) onVerify()
+  }, [state, onVerify])
 
   function scheduleEmailCheck(email: string) {
     clearTimeout(timer.current)

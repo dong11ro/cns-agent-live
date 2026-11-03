@@ -7,15 +7,16 @@ import { safeNext } from "@/lib/auth/redirect"
 import { cn } from "@/lib/utils"
 import { copy, steps, type StepId } from "../_content"
 import { AccountStep, type AccountValues } from "./account-step"
+import { VerifyStep } from "./verify-step"
 import { allRequiredAgreed, emptyAgreements, TermsStep } from "./terms-step"
 
 /**
  * 단계 상태는 클라이언트에만 둔다. URL을 바꾸지 않아 새로고침하면 1단계로 돌아간다
  * (비밀번호를 URL·스토리지에 남기지 않기 위해).
  */
-export function SignupWizard({ oauthSlot }: { oauthSlot?: React.ReactNode }) {
+export function SignupWizard({ oauthSlot, verifyEnabled }: { oauthSlot?: React.ReactNode; verifyEnabled: boolean }) {
   const next = safeNext(useSearchParams().get("next"), "")
-  const visibleSteps = steps.filter((s) => s.id !== "verify")
+  const visibleSteps = verifyEnabled ? steps : steps.filter((s) => s.id !== "verify")
   const [stepId, setStepId] = useState<StepId>("terms")
   const [agreements, setAgreements] = useState(emptyAgreements)
   const [values, setValues] = useState<AccountValues>({ email: "", password: "", passwordConfirm: "", name: "" })
@@ -82,10 +83,12 @@ export function SignupWizard({ oauthSlot }: { oauthSlot?: React.ReactNode }) {
         </>
       )}
 
+      {stepId === "verify" && <VerifyStep email={values.email} next={next} />}
+
       {stepId === "account" && (
         <>
           {oauthSlot}
-          <AccountStep values={values} onValues={setValues} agreements={agreements} next={next} />
+          <AccountStep values={values} onValues={setValues} agreements={agreements} next={next} onVerify={() => setStepId("verify")} />
           <Button type="button" variant="ghost" className="rounded-full" onClick={() => setStepId("terms")}>
             {copy.back}
           </Button>

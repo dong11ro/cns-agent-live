@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Suspense } from "react"
 import { Card } from "@/components/ui/card"
+import { isEmailVerificationEnabled } from "@/lib/auth/verification"
 import { copy } from "./_content"
 import { SignupWizard } from "./_components/signup-wizard"
 
@@ -16,7 +17,7 @@ export default function SignupPage() {
       </noscript>
       {/* useSearchParams(next)를 읽으므로 경계 안에서 렌더 */}
       <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-muted" />}>
-        <SignupWizard />
+        <SignupWizard verifyEnabled={isEmailVerificationEnabled()} />
       </Suspense>
       <p className="text-center text-sm text-muted-foreground">
         {copy.haveAccount}{" "}
