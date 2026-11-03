@@ -22,3 +22,22 @@ export const TERMS: Term[] = [
 
 export const TERM_IDS = TERMS.map((t) => t.id)
 export const REQUIRED_TERM_IDS = TERMS.filter((t) => t.required).map((t) => t.id)
+
+export type AgreementRecord = { termId: TermId; version: string; agreed: boolean; at: Date }
+export type ConsentState = { agreed: boolean; version: string; at: Date } | null
+
+/** termId별 최신 레코드가 현재 상태다. */
+export function currentConsents(records: AgreementRecord[]): Record<TermId, ConsentState> {
+  const out = Object.fromEntries(TERM_IDS.map((id) => [id, null])) as Record<TermId, ConsentState>
+  for (const r of records) {
+    const cur = out[r.termId]
+    if (r.termId in out && (!cur || r.at > cur.at)) out[r.termId] = { agreed: r.agreed, version: r.version, at: r.at }
+  }
+  return out
+}
+
+/** 최신 버전에 동의하지 않은 필수 약관(재동의 화면 감지용). */
+export function missingRequiredTerms(records: AgreementRecord[]): TermId[] {
+  const state = currentConsents(records)
+  return TERMS.filter((t) => t.required && !(state[t.id]?.agreed && state[t.id]?.version === t.version)).map((t) => t.id)
+}
