@@ -20,7 +20,7 @@ export async function GET(request: Request, ctx: RouteContext<"/api/auth/oauth/[
   const url = authorizationUrl(provider, state, codeVerifier);
   if (!url) redirect(`${failTo}?error=oauth_disabled`);
 
-  const token = await signOAuthStart({ provider, state, codeVerifier, intent, next: safeNext(params.get("next")) })
-  ;(await cookies()).set(OAUTH_COOKIE, token, cookieOptions(TEMP_TTL_SEC, OAUTH_COOKIE_PATH));
+  const token = await signOAuthStart({ provider, state, codeVerifier, intent, next: safeNext(params.get("next")) });
+  (await cookies()).set(OAUTH_COOKIE, token, cookieOptions(TEMP_TTL_SEC, OAUTH_COOKIE_PATH));
   redirect(url.toString());
 }
