@@ -70,6 +70,9 @@ export async function guardedAttempt(scope: string, raw: string, limit: Limit, a
 }
 
 /** 신뢰할 프록시 뒤에서만 의미가 있다. 없으면 null → IP 한도는 건너뛴다. */
+// shortcut: X-Forwarded-For 첫 값은 클라이언트가 위조할 수 있다(Next는 헤더가 없을 때만 소켓 주소로 채운다,
+// next/dist/server/base-server.js:601). 요청마다 값을 바꾸면 loginIp·emailCheck·signupIp 한도가 무력해진다.
+// 배포 형태(PLAN §11 Q10)가 정해지면 업그레이드: 신뢰 프록시 1단 뒤면 .at(-1)(프록시가 붙인 값), Vercel 등은 플랫폼 헤더.
 export async function clientIp(): Promise<string | null> {
   const forwarded = (await headers()).get("x-forwarded-for")
   return forwarded?.split(",")[0]?.trim() || null
