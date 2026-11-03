@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation"
 import { GENERIC_ERROR } from "@/lib/auth/account"
 import { hashPassword, needsRehash, verifyPassword } from "@/lib/auth/password"
-import { clientIp, hit, LIMITS, peek, reset } from "@/lib/auth/rate-limit"
+import { clientIp, guardedAttempt, hit, LIMITS } from "@/lib/auth/rate-limit"
 import { safeNext } from "@/lib/auth/redirect"
 import { fieldErrors, loginSchema, type FormState } from "@/lib/auth/schemas"
 import { startSession } from "@/lib/auth/session"
@@ -24,19 +24,14 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
       const r = await hit("login-ip", ip, LIMITS.loginIp)
       if (r.limited) return { formError: tooMany(r.retryAfterSec), values }
     }
-    // 계정 잠금이 아니라 시간창: 타인이 계정을 영구히 잠글 수 없다
-    const emailLimit = await peek("login-email", email, LIMITS.loginEmail)
-    if (emailLimit.limited) return { formError: tooMany(emailLimit.retryAfterSec), values }
-
     const { users } = await collections()
     const user = await users.findOne({ email })
+    // 계정 잠금이 아니라 시간창: 타인이 계정을 영구히 잠글 수 없다.
     // 없는 계정·OAuth 전용 계정도 더미 해시로 같은 시간을 쓰고 같은 메시지를 준다
-    if (!user || !(await verifyPassword(user.passwordHash, password))) {
-      await hit("login-email", email, LIMITS.loginEmail)
-      return { formError: INVALID, values }
-    }
+    const result = await guardedAttempt("login-email", email, LIMITS.loginEmail, () => verifyPassword(user?.passwordHash, password))
+    if (result.limited) return { formError: tooMany(result.retryAfterSec), values }
+    if (!user || !result.ok) return { formError: INVALID, values }
 
-    await reset("login-email", email)
     if (user.passwordHash && needsRehash(user.passwordHash)) {
       await users.updateOne({ _id: user._id }, { $set: { passwordHash: await hashPassword(password), updatedAt: new Date() } })
     }

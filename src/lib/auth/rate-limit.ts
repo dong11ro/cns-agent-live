@@ -19,42 +19,54 @@ export function rateKey(scope: string, raw: string): string {
   return `${scope}:${createHmac("sha256", deriveKey("rate-limit")).update(raw).digest("base64url")}`
 }
 
-export function isLimited(count: number, limit: number): boolean {
-  return count > limit
-}
-
 export type RateResult = { limited: boolean; retryAfterSec: number }
 
-function result(doc: { count: number; expiresAt: Date } | null, limit: number, now: Date): RateResult {
+/** 카운터 저장소. increment는 원자적이어야 한다(Mongo $inc). 테스트에선 메모리 구현으로 바꾼다. */
+export type CounterStore = {
+  increment(id: string, windowSec: number, now: Date): Promise<{ count: number; expiresAt: Date } | null>
+  reset(id: string): Promise<void>
+}
+
+const mongoStore: CounterStore = {
+  async increment(_id, windowSec, now) {
+    const { rateLimits } = await collections()
+    // TTL 모니터는 1분 주기라 만료 문서가 남아 있을 수 있다
+    await rateLimits.deleteOne({ _id, expiresAt: { $lte: now } })
+    const update = { $inc: { count: 1 }, $setOnInsert: { expiresAt: new Date(now.getTime() + windowSec * 1000) } }
+    return rateLimits
+      .findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })
+      .catch(() => rateLimits.findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })) // 동시 upsert 중복 키 1회 재시도
+  },
+  async reset(_id) {
+    const { rateLimits } = await collections()
+    await rateLimits.deleteOne({ _id })
+  },
+}
+
+/** 고정 윈도 카운터를 1 올리고 한도 초과(count > limit) 여부를 돌려준다. */
+export async function hit(scope: string, raw: string, { limit, windowSec }: Limit, store = mongoStore): Promise<RateResult> {
+  const now = new Date()
+  const doc = await store.increment(rateKey(scope, raw), windowSec, now)
   if (!doc || doc.expiresAt <= now) return { limited: false, retryAfterSec: 0 }
-  return { limited: isLimited(doc.count, limit), retryAfterSec: Math.ceil((doc.expiresAt.getTime() - now.getTime()) / 1000) }
+  return { limited: doc.count > limit, retryAfterSec: Math.ceil((doc.expiresAt.getTime() - now.getTime()) / 1000) }
 }
 
-/** 고정 윈도 카운터를 1 올리고 한도 초과 여부를 돌려준다. */
-export async function hit(scope: string, raw: string, { limit, windowSec }: Limit): Promise<RateResult> {
-  const { rateLimits } = await collections()
-  const _id = rateKey(scope, raw)
-  const now = new Date()
-  // TTL 모니터는 1분 주기라 만료 문서가 남아 있을 수 있다
-  await rateLimits.deleteOne({ _id, expiresAt: { $lte: now } })
-  const update = { $inc: { count: 1 }, $setOnInsert: { expiresAt: new Date(now.getTime() + windowSec * 1000) } }
-  const doc = await rateLimits
-    .findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })
-    .catch(() => rateLimits.findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })) // 동시 upsert 중복 키 1회 재시도
-  return result(doc, limit, now)
+export async function reset(scope: string, raw: string, store = mongoStore) {
+  await store.reset(rateKey(scope, raw))
 }
 
-/** 올리지 않고 현재 상태만 본다(로그인 실패 횟수 확인). count가 limit에 도달하면 제한. */
-export async function peek(scope: string, raw: string, { limit }: Limit): Promise<RateResult> {
-  const { rateLimits } = await collections()
-  const now = new Date()
-  const doc = await rateLimits.findOne({ _id: rateKey(scope, raw) })
-  return result(doc, limit - 1, now)
-}
+export type AttemptResult = { limited: true; retryAfterSec: number } | { limited: false; ok: boolean }
 
-export async function reset(scope: string, raw: string) {
-  const { rateLimits } = await collections()
-  await rateLimits.deleteOne({ _id: rateKey(scope, raw) })
+/**
+ * 비밀번호 확인처럼 실패 횟수를 제한할 시도: 먼저 원자적으로 세고(hit) 한도를 넘었으면 시도 자체를 하지 않는다.
+ * 확인-후-증가(peek → verify → hit)는 동시 요청이 모두 확인을 통과해 한도를 넘는다. 성공하면 카운터를 지운다.
+ */
+export async function guardedAttempt(scope: string, raw: string, limit: Limit, attempt: () => Promise<boolean>, store = mongoStore): Promise<AttemptResult> {
+  const r = await hit(scope, raw, limit, store)
+  if (r.limited) return { limited: true, retryAfterSec: r.retryAfterSec }
+  const ok = await attempt()
+  if (ok) await reset(scope, raw, store)
+  return { limited: false, ok }
 }
 
 /** 신뢰할 프록시 뒤에서만 의미가 있다. 없으면 null → IP 한도는 건너뛴다. */

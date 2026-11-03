@@ -8,7 +8,7 @@ import { recordAgreements } from "@/lib/auth/consents"
 import { requireUserDoc } from "@/lib/auth/dal"
 import { isProviderId } from "@/lib/auth/oauth/providers"
 import { hashPassword, verifyPassword } from "@/lib/auth/password"
-import { hit, LIMITS, peek, reset } from "@/lib/auth/rate-limit"
+import { guardedAttempt, LIMITS, reset } from "@/lib/auth/rate-limit"
 import { fieldErrors, newPasswordSchema, normalizeEmail, profileSchema, type FormState } from "@/lib/auth/schemas"
 import { clearSessionCookies, revokeAllSessions, startSession } from "@/lib/auth/session"
 import { collections } from "@/lib/db/collections"
@@ -22,14 +22,9 @@ function fail(err: unknown, what: string): FormState {
 
 /** 현재 비밀번호 확인. 로그인과 같은 이메일 실패 한도를 공유해 무차별 대입을 막는다. */
 async function checkCurrentPassword(email: string, hash: string, password: string): Promise<string | null> {
-  const limit = await peek("login-email", email, LIMITS.loginEmail)
-  if (limit.limited) return `시도가 너무 많습니다. ${Math.ceil(limit.retryAfterSec / 60)}분 뒤 다시 시도해 주세요.`
-  if (await verifyPassword(hash, password)) {
-    await reset("login-email", email)
-    return null
-  }
-  await hit("login-email", email, LIMITS.loginEmail)
-  return "현재 비밀번호가 올바르지 않습니다."
+  const result = await guardedAttempt("login-email", email, LIMITS.loginEmail, () => verifyPassword(hash, password))
+  if (result.limited) return `시도가 너무 많습니다. ${Math.ceil(result.retryAfterSec / 60)}분 뒤 다시 시도해 주세요.`
+  return result.ok ? null : "현재 비밀번호가 올바르지 않습니다."
 }
 
 export async function updateProfile(_prev: FormState, formData: FormData): Promise<FormState> {
