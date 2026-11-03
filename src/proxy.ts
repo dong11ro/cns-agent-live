@@ -1,10 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { safeNext } from "@/lib/auth/redirect"
+import { decideRoute } from "@/lib/auth/route-guard"
 import { clearSessionCookies, COOKIE, rotateSession, writeSessionCookies, type IssuedTokens } from "@/lib/auth/session"
 import { verifyAccessToken } from "@/lib/auth/tokens"
-
-const PROTECTED = ["/mypage"]
-const GUEST_ONLY = ["/login", "/signup"] // 정확히 이 경로만(/signup/oauth·/signup/complete 제외)
 
 /**
  * 낙관적 검사만 한다: access 서명·만료 확인, 보호 경로 리다이렉트.
@@ -36,17 +33,11 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  let response: NextResponse
-  if (!claims && PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
-    const url = new URL("/login", request.url)
-    url.searchParams.set("next", pathname + search)
-    if (refreshToken) url.searchParams.set("reason", "expired")
-    response = NextResponse.redirect(url)
-  } else if (claims && GUEST_ONLY.includes(pathname) && request.method === "GET") {
-    response = NextResponse.redirect(new URL(safeNext(request.nextUrl.searchParams.get("next"), "/mypage"), request.url))
-  } else {
-    response = NextResponse.next({ request: { headers: request.headers } })
-  }
+  const decision = decideRoute({ pathname, search, method: request.method, signedIn: !!claims, hadRefresh: !!refreshToken })
+  const response =
+    decision.type === "redirect"
+      ? NextResponse.redirect(new URL(decision.to, request.url))
+      : NextResponse.next({ request: { headers: request.headers } })
 
   if (issued) writeSessionCookies(response.cookies, issued)
   if (clear) clearSessionCookies(response.cookies)

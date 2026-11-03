@@ -50,14 +50,14 @@ export async function getCurrentUser(): Promise<UserDTO | null> {
 /** 보호 페이지·Server Action은 이것을 거쳐 데이터에 접근한다. */
 export async function verifySession(): Promise<UserDTO> {
   const user = await getCurrentUser()
-  if (!user) redirect("/login")
+  if (!user) redirect("/login?reason=expired")
   return user
 }
 
 /** 비밀번호 확인 등 서버 내부에서 원본 문서가 필요한 액션용. */
 export async function requireUserDoc(): Promise<UserDoc> {
   const user = await getCurrentUserDoc()
-  if (!user) redirect("/login")
+  if (!user) redirect("/login?reason=expired")
   return user
 }
 
