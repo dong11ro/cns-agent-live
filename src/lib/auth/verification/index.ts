@@ -80,9 +80,12 @@ export async function issueCode(input: Target & { userId: ObjectId | null }): Pr
 export async function verifyCode(input: Target & { code: string }): Promise<CodeCheck> {
   const { verifications } = await collections()
   const filter = { target: input.target, channel: input.channel, purpose: input.purpose }
-  const doc = await verifications.findOne(filter)
+  // 확인 전에 시도 횟수부터 원자적으로 올린다(동시 요청이 MAX_ATTEMPTS를 넘겨 추측하지 못하게).
+  // 조건(attempts < MAX)을 못 맞추면 이유(만료·초과·없음)만 판정한다.
+  const doc =
+    (await verifications.findOneAndUpdate({ ...filter, attempts: { $lt: MAX_ATTEMPTS } }, { $inc: { attempts: 1 } }, { returnDocument: "before" })) ??
+    (await verifications.findOne(filter))
   const result = checkCode(doc, input.code, new Date())
   if (result === "ok") await verifications.deleteOne(filter)
-  else if (result === "mismatch") await verifications.updateOne(filter, { $inc: { attempts: 1 } })
   return result
 }
