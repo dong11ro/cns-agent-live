@@ -6,14 +6,16 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 /** 제출 중 비활성 + 스피너. 문구는 pendingLabel로 유지한다. */
-export function SubmitButton({ children, pendingLabel, className, variant = "brand", disabled }: {
+export function SubmitButton({ children, pendingLabel, className, variant = "brand", disabled, pending: pendingProp }: {
   children: React.ReactNode
   pendingLabel?: string
   className?: string
   variant?: "brand" | "outline" | "destructive"
   disabled?: boolean
+  /** form action 대신 startTransition으로 제출할 때 useActionState의 isPending */
+  pending?: boolean
 }) {
-  const { pending } = useFormStatus()
+  const pending = useFormStatus().pending || !!pendingProp
   return (
     <button
       type="submit"

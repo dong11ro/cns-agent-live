@@ -121,3 +121,18 @@ export function fieldErrors(error: z.ZodError): Record<string, string> {
   }
   return out
 }
+
+/** Server Action이 useActionState로 돌려주는 공통 상태. values로 입력을 되돌린다(비밀번호 제외). */
+export type FormState = {
+  ok?: boolean
+  message?: string
+  fieldErrors?: Record<string, string>
+  formError?: string
+  values?: Record<string, string>
+}
+
+/** 필드 하나만 검사해 첫 에러 메시지를 돌려준다(클라이언트 실시간 검증용). */
+export function firstError(schema: z.ZodType, value: unknown): string | undefined {
+  const r = schema.safeParse(value)
+  return r.success ? undefined : r.error.issues[0]?.message
+}
