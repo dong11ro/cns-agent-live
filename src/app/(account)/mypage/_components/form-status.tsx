@@ -1,4 +1,4 @@
-import type { FormState } from "@/lib/auth/schemas"
+import type { FormState } from "@/lib/auth/schemas";
 
 /** 섹션 폼 결과: 성공은 aria-live 인라인, 실패는 alert */
 export function FormStatus({ state }: { state: FormState }) {
@@ -13,9 +13,9 @@ export function FormStatus({ state }: { state: FormState }) {
         </p>
       )}
     </>
-  )
+  );
 }
 
 export function SectionSkeleton() {
-  return <div className="h-48 animate-pulse rounded-3xl bg-muted" />
+  return <div className="h-48 animate-pulse rounded-3xl bg-muted" />;
 }

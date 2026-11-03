@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useActionState } from "react"
-import { FormField } from "@/components/molecules/form-field"
-import { SubmitButton } from "@/components/molecules/submit-button"
+import { useActionState } from "react";
+import { FormField } from "@/components/molecules/form-field";
+import { SubmitButton } from "@/components/molecules/submit-button";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,16 +12,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { logout } from "@/lib/auth/actions"
-import type { FormState } from "@/lib/auth/schemas"
-import { deleteAccount, logoutAll } from "../_actions"
-import { FormStatus } from "./form-status"
-import { SectionCard } from "./section-card"
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { logout } from "@/lib/auth/actions";
+import type { FormState } from "@/lib/auth/schemas";
+import { deleteAccount, logoutAll } from "../_actions";
+import { FormStatus } from "./form-status";
+import { SectionCard } from "./section-card";
 
 export function DangerZoneSection({ hasPassword }: { hasPassword: boolean }) {
-  const [state, formAction] = useActionState(deleteAccount, {} as FormState)
+  const [state, formAction] = useActionState(deleteAccount, {} as FormState);
   return (
     <SectionCard title="로그인 관리 · 회원 탈퇴">
       <div className="grid gap-5">
@@ -78,5 +78,5 @@ export function DangerZoneSection({ hasPassword }: { hasPassword: boolean }) {
         </div>
       </div>
     </SectionCard>
-  )
+  );
 }

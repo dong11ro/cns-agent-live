@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useActionState } from "react"
-import { OAuthButtons, type OAuthButton } from "@/components/molecules/oauth-buttons"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import type { FormState } from "@/lib/auth/schemas"
-import { unlinkAccount } from "../_actions"
-import { FormStatus } from "./form-status"
-import { SectionCard } from "./section-card"
+import { useActionState } from "react";
+import { OAuthButtons, type OAuthButton } from "@/components/molecules/oauth-buttons";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import type { FormState } from "@/lib/auth/schemas";
+import { unlinkAccount } from "../_actions";
+import { FormStatus } from "./form-status";
+import { SectionCard } from "./section-card";
 
-export type LinkedRow = OAuthButton & { connected: boolean; email: string | null }
+export type LinkedRow = OAuthButton & { connected: boolean; email: string | null };
 
 export function LinkedAccountsSection({ rows, canUnlink, notice }: {
-  rows: LinkedRow[]
-  canUnlink: boolean
-  notice?: { ok: boolean; text: string }
+  rows: LinkedRow[];
+  canUnlink: boolean;
+  notice?: { ok: boolean; text: string };
 }) {
-  const [state, formAction] = useActionState(unlinkAccount, {} as FormState)
-  const connected = rows.filter((r) => r.connected)
+  const [state, formAction] = useActionState(unlinkAccount, {} as FormState);
+  const connected = rows.filter((r) => r.connected);
   return (
     <SectionCard title="연결된 계정" description="소셜 계정을 연결하면 그 계정으로도 로그인할 수 있습니다.">
       <div className="grid gap-4">
@@ -59,5 +59,5 @@ export function LinkedAccountsSection({ rows, canUnlink, notice }: {
         <FormStatus state={state} />
       </div>
     </SectionCard>
-  )
+  );
 }

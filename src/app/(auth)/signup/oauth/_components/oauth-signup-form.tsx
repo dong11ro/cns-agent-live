@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { startTransition, useActionState, useState } from "react"
-import { FormField } from "@/components/molecules/form-field"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import { fieldValue, useFormValidation } from "@/hooks/use-form-validation"
-import { emailSchema, firstError, nameSchema, type FormState } from "@/lib/auth/schemas"
-import { allRequiredAgreed, emptyAgreements, TermsStep } from "../../_components/terms-step"
-import { completeOAuthSignup } from "../_actions"
+import { startTransition, useActionState, useState } from "react";
+import { FormField } from "@/components/molecules/form-field";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { fieldValue, useFormValidation } from "@/hooks/use-form-validation";
+import { emailSchema, firstError, nameSchema, type FormState } from "@/lib/auth/schemas";
+import { allRequiredAgreed, emptyAgreements, TermsStep } from "../../_components/terms-step";
+import { completeOAuthSignup } from "../_actions";
 
 function validate(name: string, form: HTMLFormElement) {
-  if (name === "email") return firstError(emailSchema, fieldValue(form, "email"))
-  if (name === "name") return firstError(nameSchema, fieldValue(form, "name"))
+  if (name === "email") return firstError(emailSchema, fieldValue(form, "email"));
+  if (name === "name") return firstError(nameSchema, fieldValue(form, "name"));
 }
 
 /** 제공자 이메일이 있으면 읽기 전용으로 보여주고, 없으면(카카오 이메일 미동의 등) 입력받는다. */
 export function OAuthSignupForm({ providerLabel, email, name }: { providerLabel: string; email: string | null; name: string }) {
-  const [state, formAction, pending] = useActionState(completeOAuthSignup, {} as FormState)
-  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate)
-  const [agreements, setAgreements] = useState(emptyAgreements)
-  const [values, setValues] = useState({ email: email ?? "", name })
-  const canSubmit = allRequiredAgreed(agreements)
+  const [state, formAction, pending] = useActionState(completeOAuthSignup, {} as FormState);
+  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate);
+  const [agreements, setAgreements] = useState(emptyAgreements);
+  const [values, setValues] = useState({ email: email ?? "", name });
+  const canSubmit = allRequiredAgreed(agreements);
 
   return (
     <form
@@ -28,9 +28,9 @@ export function OAuthSignupForm({ providerLabel, email, name }: { providerLabel:
       onBlur={onBlur}
       onChange={onChange}
       onSubmit={(e) => {
-        e.preventDefault()
-        const data = new FormData(e.currentTarget)
-        startTransition(() => formAction(data))
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => formAction(data));
       }}
       className="grid gap-4"
     >
@@ -77,5 +77,5 @@ export function OAuthSignupForm({ providerLabel, email, name }: { providerLabel:
         가입하기
       </SubmitButton>
     </form>
-  )
+  );
 }

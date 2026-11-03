@@ -1,64 +1,64 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { startTransition, useActionState, useEffect, useRef, useState } from "react"
-import { PasswordStrength } from "@/components/atoms/password-strength"
-import { FormField } from "@/components/molecules/form-field"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import { fieldValue, useFormValidation } from "@/hooks/use-form-validation"
-import { emailSchema, firstError, nameSchema, newPasswordSchema, type FormState } from "@/lib/auth/schemas"
-import { copy } from "../_content"
-import { checkEmailAvailable, signup, type EmailCheck } from "../_actions"
-import type { Agreements } from "./terms-step"
+import Link from "next/link";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
+import { PasswordStrength } from "@/components/atoms/password-strength";
+import { FormField } from "@/components/molecules/form-field";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { fieldValue, useFormValidation } from "@/hooks/use-form-validation";
+import { emailSchema, firstError, nameSchema, newPasswordSchema, type FormState } from "@/lib/auth/schemas";
+import { copy } from "../_content";
+import { checkEmailAvailable, signup, type EmailCheck } from "../_actions";
+import type { Agreements } from "./terms-step";
 
-export type AccountValues = { email: string; password: string; passwordConfirm: string; name: string }
+export type AccountValues = { email: string; password: string; passwordConfirm: string; name: string };
 
 function validate(name: string, form: HTMLFormElement) {
-  const email = fieldValue(form, "email")
+  const email = fieldValue(form, "email");
   switch (name) {
     case "email":
-      return firstError(emailSchema, email)
+      return firstError(emailSchema, email);
     case "password":
-      return firstError(newPasswordSchema(email), fieldValue(form, "password"))
+      return firstError(newPasswordSchema(email), fieldValue(form, "password"));
     case "passwordConfirm":
-      return fieldValue(form, "passwordConfirm") !== fieldValue(form, "password") ? "비밀번호가 일치하지 않습니다." : undefined
+      return fieldValue(form, "passwordConfirm") !== fieldValue(form, "password") ? "비밀번호가 일치하지 않습니다." : undefined;
     case "name":
-      return firstError(nameSchema, fieldValue(form, "name"))
+      return firstError(nameSchema, fieldValue(form, "name"));
   }
 }
 
 /** 값은 상위(위저드)가 들고 있어 이전 단계로 갔다 와도 유지된다. 제출은 signup 액션 한 번. */
 export function AccountStep({ values, onValues, agreements, next, onVerify }: {
-  values: AccountValues
-  onValues: (v: AccountValues) => void
-  agreements: Agreements
-  next: string
+  values: AccountValues;
+  onValues: (v: AccountValues) => void;
+  agreements: Agreements;
+  next: string;
   /** 검증 플래그 on이면 가입 후 redirect 대신 ok가 와서 인증 단계로 넘어간다 */
-  onVerify: () => void
+  onVerify: () => void;
 }) {
-  const [state, formAction, pending] = useActionState(signup, {} as FormState)
-  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate)
-  const [emailCheck, setEmailCheck] = useState<{ email: string; result: EmailCheck } | null>(null)
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [state, formAction, pending] = useActionState(signup, {} as FormState);
+  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate);
+  const [emailCheck, setEmailCheck] = useState<{ email: string; result: EmailCheck } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // 제출을 startTransition으로 하므로 React의 폼 자동 리셋이 없고, 값은 클라이언트 상태에만 있다(서버로 비밀번호를 되돌려 받지 않음)
-  useEffect(() => () => clearTimeout(timer.current), [])
+  useEffect(() => () => clearTimeout(timer.current), []);
   useEffect(() => {
-    if (state.ok) onVerify()
-  }, [state, onVerify])
+    if (state.ok) onVerify();
+  }, [state, onVerify]);
 
   function scheduleEmailCheck(email: string) {
-    clearTimeout(timer.current)
-    if (firstError(emailSchema, email)) return
+    clearTimeout(timer.current);
+    if (firstError(emailSchema, email)) return;
     timer.current = setTimeout(async () => {
-      const result = await checkEmailAvailable(email)
-      setEmailCheck({ email, result })
-    }, 400)
+      const result = await checkEmailAvailable(email);
+      setEmailCheck({ email, result });
+    }, 400);
   }
 
-  const set = (key: keyof AccountValues) => (e: React.ChangeEvent<HTMLInputElement>) => onValues({ ...values, [key]: e.target.value })
-  const check = emailCheck?.email === values.email ? emailCheck.result : null
-  const emailError = errors.email ?? (check === "taken" ? copy.emailTaken : undefined)
+  const set = (key: keyof AccountValues) => (e: React.ChangeEvent<HTMLInputElement>) => onValues({ ...values, [key]: e.target.value });
+  const check = emailCheck?.email === values.email ? emailCheck.result : null;
+  const emailError = errors.email ?? (check === "taken" ? copy.emailTaken : undefined);
 
   return (
     <form
@@ -67,9 +67,9 @@ export function AccountStep({ values, onValues, agreements, next, onVerify }: {
       onBlur={onBlur}
       onChange={onChange}
       onSubmit={(e) => {
-        e.preventDefault()
-        const data = new FormData(e.currentTarget)
-        startTransition(() => formAction(data))
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => formAction(data));
       }}
       className="grid gap-4"
     >
@@ -145,5 +145,5 @@ export function AccountStep({ values, onValues, agreements, next, onVerify }: {
         {copy.submit}
       </SubmitButton>
     </form>
-  )
+  );
 }

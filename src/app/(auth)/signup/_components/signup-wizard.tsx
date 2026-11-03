@@ -1,40 +1,40 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { safeNext } from "@/lib/auth/redirect"
-import { cn } from "@/lib/utils"
-import { copy, steps, type StepId } from "../_content"
-import { AccountStep, type AccountValues } from "./account-step"
-import { VerifyStep } from "./verify-step"
-import { allRequiredAgreed, emptyAgreements, TermsStep } from "./terms-step"
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { safeNext } from "@/lib/auth/redirect";
+import { cn } from "@/lib/utils";
+import { copy, steps, type StepId } from "../_content";
+import { AccountStep, type AccountValues } from "./account-step";
+import { VerifyStep } from "./verify-step";
+import { allRequiredAgreed, emptyAgreements, TermsStep } from "./terms-step";
 
 /**
  * 단계 상태는 클라이언트에만 둔다. URL을 바꾸지 않아 새로고침하면 1단계로 돌아간다
  * (비밀번호를 URL·스토리지에 남기지 않기 위해).
  */
 export function SignupWizard({ oauthSlot, verifyEnabled }: { oauthSlot?: React.ReactNode; verifyEnabled: boolean }) {
-  const next = safeNext(useSearchParams().get("next"), "")
-  const visibleSteps = verifyEnabled ? steps : steps.filter((s) => s.id !== "verify")
-  const [stepId, setStepId] = useState<StepId>("terms")
-  const [agreements, setAgreements] = useState(emptyAgreements)
-  const [values, setValues] = useState<AccountValues>({ email: "", password: "", passwordConfirm: "", name: "" })
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const firstRender = useRef(true)
+  const next = safeNext(useSearchParams().get("next"), "");
+  const visibleSteps = verifyEnabled ? steps : steps.filter((s) => s.id !== "verify");
+  const [stepId, setStepId] = useState<StepId>("terms");
+  const [agreements, setAgreements] = useState(emptyAgreements);
+  const [values, setValues] = useState<AccountValues>({ email: "", password: "", passwordConfirm: "", name: "" });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const firstRender = useRef(true);
 
   // 단계 전환 시 새 단계 제목으로 포커스
   useEffect(() => {
     if (firstRender.current) {
-      firstRender.current = false
-      return
+      firstRender.current = false;
+      return;
     }
-    headingRef.current?.focus()
-  }, [stepId])
+    headingRef.current?.focus();
+  }, [stepId]);
 
-  const index = visibleSteps.findIndex((s) => s.id === stepId)
-  const step = visibleSteps[index]
-  const canProceed = allRequiredAgreed(agreements)
+  const index = visibleSteps.findIndex((s) => s.id === stepId);
+  const step = visibleSteps[index];
+  const canProceed = allRequiredAgreed(agreements);
 
   return (
     <div className="grid gap-6">
@@ -95,5 +95,5 @@ export function SignupWizard({ oauthSlot, verifyEnabled }: { oauthSlot?: React.R
         </>
       )}
     </div>
-  )
+  );
 }

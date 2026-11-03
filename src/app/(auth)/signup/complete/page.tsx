@@ -1,14 +1,14 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-import { Suspense } from "react"
-import { PartyPopper } from "lucide-react"
-import { buttonVariants } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { verifySession } from "@/lib/auth/dal"
-import { safeNext } from "@/lib/auth/redirect"
-import { cn } from "@/lib/utils"
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+import { PartyPopper } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { verifySession } from "@/lib/auth/dal";
+import { safeNext } from "@/lib/auth/redirect";
+import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = { title: "가입 완료 | 넥스트스텝 IT 아카데미" }
+export const metadata: Metadata = { title: "가입 완료 | 넥스트스텝 IT 아카데미" };
 
 // 토스트 대신 완료 화면 한 장(토스트 의존성을 늘리지 않기 위해)
 export default function SignupCompletePage({ searchParams }: PageProps<"/signup/complete">) {
@@ -21,12 +21,12 @@ export default function SignupCompletePage({ searchParams }: PageProps<"/signup/
         <Welcome searchParams={searchParams} />
       </Suspense>
     </Card>
-  )
+  );
 }
 
 async function Welcome({ searchParams }: { searchParams: PageProps<"/signup/complete">["searchParams"] }) {
-  const user = await verifySession()
-  const next = safeNext((await searchParams).next, "")
+  const user = await verifySession();
+  const next = safeNext((await searchParams).next, "");
   return (
     <>
       <h1 className="font-heading text-3xl">환영합니다, {user.name}님!</h1>
@@ -43,5 +43,5 @@ async function Welcome({ searchParams }: { searchParams: PageProps<"/signup/comp
         </Link>
       </div>
     </>
-  )
+  );
 }

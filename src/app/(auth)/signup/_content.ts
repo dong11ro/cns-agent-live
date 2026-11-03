@@ -1,10 +1,10 @@
-export type StepId = "terms" | "account" | "verify"
+export type StepId = "terms" | "account" | "verify";
 
 export const steps: { id: StepId; title: string; description: string }[] = [
   { id: "terms", title: "약관 동의", description: "서비스 이용을 위해 약관에 동의해 주세요." },
   { id: "account", title: "계정 정보", description: "로그인에 쓸 이메일과 비밀번호를 입력해 주세요." },
   { id: "verify", title: "이메일 인증", description: "메일로 받은 6자리 코드를 입력해 주세요." },
-]
+];
 
 export const copy = {
   title: "회원가입",
@@ -20,4 +20,4 @@ export const copy = {
   passwordMatch: "비밀번호가 일치합니다 ✓",
   haveAccount: "이미 회원이신가요?",
   noscript: "회원가입은 단계별 화면이라 JavaScript가 필요합니다. 브라우저 설정에서 JavaScript를 켜 주세요.",
-}
+};

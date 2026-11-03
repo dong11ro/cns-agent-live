@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useActionState, useEffect, useRef } from "react"
-import { FormField } from "@/components/molecules/form-field"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import { fieldValue, useFormValidation } from "@/hooks/use-form-validation"
-import { emailSchema, firstError, type FormState } from "@/lib/auth/schemas"
-import { login } from "../_actions"
+import { useActionState, useEffect, useRef } from "react";
+import { FormField } from "@/components/molecules/form-field";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { fieldValue, useFormValidation } from "@/hooks/use-form-validation";
+import { emailSchema, firstError, type FormState } from "@/lib/auth/schemas";
+import { login } from "../_actions";
 
 function validate(name: string, form: HTMLFormElement) {
-  if (name === "email") return firstError(emailSchema, fieldValue(form, "email"))
-  if (name === "password") return fieldValue(form, "password") ? undefined : "비밀번호를 입력해 주세요."
+  if (name === "email") return firstError(emailSchema, fieldValue(form, "email"));
+  if (name === "password") return fieldValue(form, "password") ? undefined : "비밀번호를 입력해 주세요.";
 }
 
 /** JS 없이도 기본 제출로 동작한다(form action). 실패 시 이메일은 되돌리고 비밀번호만 비운다. */
 export function LoginForm({ next, defaultEmail }: { next: string; defaultEmail: string }) {
-  const [state, formAction] = useActionState(login, {} as FormState)
-  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate)
-  const passwordRef = useRef<HTMLInputElement>(null)
+  const [state, formAction] = useActionState(login, {} as FormState);
+  const { formRef, errors, onBlur, onChange } = useFormValidation(state, validate);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   // 로그인 실패(폼 에러)면 비밀번호 필드로 포커스
   useEffect(() => {
-    if (state.formError) passwordRef.current?.focus()
-  }, [state])
+    if (state.formError) passwordRef.current?.focus();
+  }, [state]);
 
   return (
     <form ref={formRef} action={formAction} noValidate onBlur={onBlur} onChange={onChange} className="grid gap-4">
@@ -57,5 +57,5 @@ export function LoginForm({ next, defaultEmail }: { next: string; defaultEmail: 
         로그인
       </SubmitButton>
     </form>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { fileURLToPath } from "node:url"
-import { defineConfig } from "vitest/config"
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
@@ -19,4 +19,4 @@ export default defineConfig({
       APP_ORIGIN: "http://localhost:3005",
     },
   },
-})
+});

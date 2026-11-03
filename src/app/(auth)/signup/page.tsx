@@ -1,15 +1,15 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-import { Suspense } from "react"
-import { OAuthButtons } from "@/components/molecules/oauth-buttons"
-import { Card } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { oauthButtonList } from "@/lib/auth/oauth/providers"
-import { isEmailVerificationEnabled } from "@/lib/auth/verification"
-import { copy } from "./_content"
-import { SignupWizard } from "./_components/signup-wizard"
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+import { OAuthButtons } from "@/components/molecules/oauth-buttons";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { oauthButtonList } from "@/lib/auth/oauth/providers";
+import { isEmailVerificationEnabled } from "@/lib/auth/verification";
+import { copy } from "./_content";
+import { SignupWizard } from "./_components/signup-wizard";
 
-export const metadata: Metadata = { title: "회원가입 | 넥스트스텝 IT 아카데미" }
+export const metadata: Metadata = { title: "회원가입 | 넥스트스텝 IT 아카데미" };
 
 export default function SignupPage() {
   return (
@@ -42,5 +42,5 @@ export default function SignupPage() {
         </Link>
       </p>
     </Card>
-  )
+  );
 }

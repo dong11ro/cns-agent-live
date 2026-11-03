@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { GraduationCap } from "lucide-react"
+import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 
 // 세션을 읽지 않는다(레이아웃은 내비게이션 때 다시 렌더되지 않음). 인증 검사는 각 페이지·액션에서.
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -13,5 +13,5 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </Link>
       <div className="w-full max-w-md">{children}</div>
     </main>
-  )
+  );
 }

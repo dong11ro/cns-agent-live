@@ -1,4 +1,4 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function SectionCard({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -9,5 +9,5 @@ export function SectionCard({ title, description, children }: { title: string; d
       </CardHeader>
       <div className="px-6">{children}</div>
     </Card>
-  )
+  );
 }

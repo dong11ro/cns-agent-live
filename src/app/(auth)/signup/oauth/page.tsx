@@ -1,15 +1,15 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-import { cookies } from "next/headers"
-import { Suspense } from "react"
-import { buttonVariants } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { PROVIDER_LABELS } from "@/lib/auth/oauth/providers"
-import { PENDING_COOKIE, verifyPendingSignup } from "@/lib/auth/oauth/state"
-import { cn } from "@/lib/utils"
-import { OAuthSignupForm } from "./_components/oauth-signup-form"
+import type { Metadata } from "next";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import { Suspense } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { PROVIDER_LABELS } from "@/lib/auth/oauth/providers";
+import { PENDING_COOKIE, verifyPendingSignup } from "@/lib/auth/oauth/state";
+import { cn } from "@/lib/utils";
+import { OAuthSignupForm } from "./_components/oauth-signup-form";
 
-export const metadata: Metadata = { title: "소셜 계정으로 가입 | 넥스트스텝 IT 아카데미" }
+export const metadata: Metadata = { title: "소셜 계정으로 가입 | 넥스트스텝 IT 아카데미" };
 
 export default function OAuthSignupPage() {
   return (
@@ -20,11 +20,11 @@ export default function OAuthSignupPage() {
         <PendingSignup />
       </Suspense>
     </Card>
-  )
+  );
 }
 
 async function PendingSignup() {
-  const pending = await verifyPendingSignup((await cookies()).get(PENDING_COOKIE)?.value)
+  const pending = await verifyPendingSignup((await cookies()).get(PENDING_COOKIE)?.value);
   if (!pending) {
     return (
       <div className="grid gap-4 text-center">
@@ -35,7 +35,7 @@ async function PendingSignup() {
           로그인으로 돌아가기
         </Link>
       </div>
-    )
+    );
   }
-  return <OAuthSignupForm providerLabel={PROVIDER_LABELS[pending.provider]} email={pending.email} name={(pending.name ?? "").slice(0, 20)} />
+  return <OAuthSignupForm providerLabel={PROVIDER_LABELS[pending.provider]} email={pending.email} name={(pending.name ?? "").slice(0, 20)} />;
 }

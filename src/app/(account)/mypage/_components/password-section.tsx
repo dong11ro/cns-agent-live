@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useActionState, useState } from "react"
-import { PasswordStrength } from "@/components/atoms/password-strength"
-import { FormField } from "@/components/molecules/form-field"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import type { FormState } from "@/lib/auth/schemas"
-import { changePassword } from "../_actions"
-import { FormStatus } from "./form-status"
-import { SectionCard } from "./section-card"
+import { useActionState, useState } from "react";
+import { PasswordStrength } from "@/components/atoms/password-strength";
+import { FormField } from "@/components/molecules/form-field";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import type { FormState } from "@/lib/auth/schemas";
+import { changePassword } from "../_actions";
+import { FormStatus } from "./form-status";
+import { SectionCard } from "./section-card";
 
 /** OAuth 전용 계정이면 현재 비밀번호 없이 "비밀번호 설정" */
 export function PasswordSection({ hasPassword, email }: { hasPassword: boolean; email: string }) {
-  const [state, formAction] = useActionState(changePassword, {} as FormState)
-  const [password, setPassword] = useState("")
-  const [prevState, setPrevState] = useState(state)
+  const [state, formAction] = useActionState(changePassword, {} as FormState);
+  const [password, setPassword] = useState("");
+  const [prevState, setPrevState] = useState(state);
   if (prevState !== state) {
-    setPrevState(state)
-    setPassword("") // 액션 후 폼이 리셋되므로 강도 표시도 맞춘다
+    setPrevState(state);
+    setPassword(""); // 액션 후 폼이 리셋되므로 강도 표시도 맞춘다
   }
   return (
     <SectionCard
@@ -47,5 +47,5 @@ export function PasswordSection({ hasPassword, email }: { hasPassword: boolean; 
         </SubmitButton>
       </form>
     </SectionCard>
-  )
+  );
 }

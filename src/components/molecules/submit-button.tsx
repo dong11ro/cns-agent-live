@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { Loader2 } from "lucide-react"
-import { useFormStatus } from "react-dom"
-import { buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Loader2 } from "lucide-react";
+import { useFormStatus } from "react-dom";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /** 제출 중 비활성 + 스피너. 문구는 pendingLabel로 유지한다. */
 export function SubmitButton({ children, pendingLabel, className, variant = "brand", disabled, pending: pendingProp }: {
-  children: React.ReactNode
-  pendingLabel?: string
-  className?: string
-  variant?: "brand" | "outline" | "destructive"
-  disabled?: boolean
+  children: React.ReactNode;
+  pendingLabel?: string;
+  className?: string;
+  variant?: "brand" | "outline" | "destructive";
+  disabled?: boolean;
   /** form action 대신 startTransition으로 제출할 때 useActionState의 isPending */
-  pending?: boolean
+  pending?: boolean;
 }) {
-  const pending = useFormStatus().pending || !!pendingProp
+  const pending = useFormStatus().pending || !!pendingProp;
   return (
     <button
       type="submit"
@@ -31,5 +31,5 @@ export function SubmitButton({ children, pendingLabel, className, variant = "bra
       {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
       {pending ? (pendingLabel ?? children) : children}
     </button>
-  )
+  );
 }

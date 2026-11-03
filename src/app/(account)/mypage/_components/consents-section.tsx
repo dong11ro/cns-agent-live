@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { useActionState } from "react"
-import { SubmitButton } from "@/components/molecules/submit-button"
-import { Badge } from "@/components/ui/badge"
-import type { FormState } from "@/lib/auth/schemas"
-import { TERMS, type TermId } from "@/lib/auth/terms"
-import { updateMarketingConsent } from "../_actions"
-import { FormStatus } from "./form-status"
-import { SectionCard } from "./section-card"
+import { useActionState } from "react";
+import { SubmitButton } from "@/components/molecules/submit-button";
+import { Badge } from "@/components/ui/badge";
+import type { FormState } from "@/lib/auth/schemas";
+import { TERMS, type TermId } from "@/lib/auth/terms";
+import { updateMarketingConsent } from "../_actions";
+import { FormStatus } from "./form-status";
+import { SectionCard } from "./section-card";
 
-type Consent = { agreed: boolean; version: string; at: string } | null
+type Consent = { agreed: boolean; version: string; at: string } | null;
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleString("ko-KR", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Seoul" })
+  new Date(iso).toLocaleString("ko-KR", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Seoul" });
 
 /** 필수 약관 철회 = 탈퇴이므로 토글은 선택 약관에만 둔다. */
 export function ConsentsSection({ consents }: { consents: Record<TermId, Consent> }) {
-  const [state, formAction] = useActionState(updateMarketingConsent, {} as FormState)
-  const noOptional = !TERMS.some((t) => !t.required && consents[t.id]?.agreed)
+  const [state, formAction] = useActionState(updateMarketingConsent, {} as FormState);
+  const noOptional = !TERMS.some((t) => !t.required && consents[t.id]?.agreed);
   return (
     <SectionCard title="약관 동의 내역" description="선택 항목은 언제든 철회하거나 다시 동의할 수 있습니다.">
       <ul className="grid gap-3">
         {TERMS.map((t) => {
-          const c = consents[t.id]
+          const c = consents[t.id];
           return (
             <li key={t.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3">
               <div className="grid gap-0.5">
@@ -43,7 +43,7 @@ export function ConsentsSection({ consents }: { consents: Record<TermId, Consent
                 </form>
               )}
             </li>
-          )
+          );
         })}
       </ul>
       {noOptional && <p className="mt-3 text-xs text-muted-foreground">동의한 선택 항목이 없습니다.</p>}
@@ -51,5 +51,5 @@ export function ConsentsSection({ consents }: { consents: Record<TermId, Consent
         <FormStatus state={state} />
       </div>
     </SectionCard>
-  )
+  );
 }

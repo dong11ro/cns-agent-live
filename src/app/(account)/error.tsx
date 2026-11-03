@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 // 원인은 서버 로그에만 남기고 화면에는 재시도만 안내한다
 export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -12,5 +12,5 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string 
         다시 시도
       </Button>
     </main>
-  )
+  );
 }

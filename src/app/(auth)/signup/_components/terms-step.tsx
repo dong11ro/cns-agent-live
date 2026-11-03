@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { TERMS, type TermId } from "@/lib/auth/terms"
-import { copy } from "../_content"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { TERMS, type TermId } from "@/lib/auth/terms";
+import { copy } from "../_content";
 
-export type Agreements = Record<TermId, boolean>
+export type Agreements = Record<TermId, boolean>;
 
-export const emptyAgreements = Object.fromEntries(TERMS.map((t) => [t.id, false])) as Agreements
+export const emptyAgreements = Object.fromEntries(TERMS.map((t) => [t.id, false])) as Agreements;
 
 export function allRequiredAgreed(a: Agreements) {
-  return TERMS.every((t) => !t.required || a[t.id])
+  return TERMS.every((t) => !t.required || a[t.id]);
 }
 
 /** 전체 동의(하위와 동기화, 일부만 체크 시 indeterminate) + 항목별 체크박스와 본문. /signup/oauth도 재사용한다. */
 export function TermsStep({ value, onChange }: { value: Agreements; onChange: (v: Agreements) => void }) {
-  const checkedCount = TERMS.filter((t) => value[t.id]).length
-  const all = checkedCount === TERMS.length
+  const checkedCount = TERMS.filter((t) => value[t.id]).length;
+  const all = checkedCount === TERMS.length;
   return (
     <div className="grid gap-3">
       <label className="flex cursor-pointer items-center gap-3 rounded-2xl border-2 bg-secondary/40 px-4 py-3 font-bold">
@@ -51,5 +51,5 @@ export function TermsStep({ value, onChange }: { value: Agreements; onChange: (v
         ))}
       </Accordion>
     </div>
-  )
+  );
 }
