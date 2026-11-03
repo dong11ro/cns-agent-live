@@ -10,29 +10,27 @@ import type { EmailSender, IdentityVerifier, SmsSender } from "./types"
 
 export const CODE_TTL_MS = 10 * 60 * 1000
 export const MAX_ATTEMPTS = 5
-export const RESEND_COOLDOWN_SEC = 60
 
 type Impl<T> = { off: T; console: T }
 
-/** 플래그에 따라 구현을 고른다. 실제 어댑터는 여기 분기에 한 줄 추가한다. */
-export function selectImpl<T>(mode: VerificationMode, impls: Impl<T>, isProd: boolean): T {
-  if (mode === "console" && isProd) throw new Error("console 구현은 개발 환경에서만 쓸 수 있습니다")
+/** 플래그에 따라 구현을 고른다(production + console은 config.ts parseMode가 이미 거부). 실제 어댑터는 여기 분기에 한 줄 추가한다. */
+export function selectImpl<T>(mode: VerificationMode, impls: Impl<T>): T {
   return impls[mode]
 }
 
 export function getEmailSender(): EmailSender {
-  const { verification, isProd } = getConfig()
-  return selectImpl(verification.email, { off: disabledEmailSender, console: consoleEmailSender }, isProd)
+  const { verification } = getConfig()
+  return selectImpl(verification.email, { off: disabledEmailSender, console: consoleEmailSender })
 }
 
 export function getSmsSender(): SmsSender {
-  const { verification, isProd } = getConfig()
-  return selectImpl(verification.sms, { off: disabledSmsSender, console: consoleSmsSender }, isProd)
+  const { verification } = getConfig()
+  return selectImpl(verification.sms, { off: disabledSmsSender, console: consoleSmsSender })
 }
 
 export function getIdentityVerifier(): IdentityVerifier {
-  const { verification, isProd } = getConfig()
-  return selectImpl(verification.identity, { off: disabledIdentityVerifier, console: consoleIdentityVerifier }, isProd)
+  const { verification } = getConfig()
+  return selectImpl(verification.identity, { off: disabledIdentityVerifier, console: consoleIdentityVerifier })
 }
 
 export function isEmailVerificationEnabled(): boolean {

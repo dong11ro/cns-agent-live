@@ -2,6 +2,7 @@ import "server-only"
 import { createHmac } from "node:crypto"
 import { headers } from "next/headers"
 import { collections } from "@/lib/db/collections"
+import { isDuplicateKey } from "./account"
 import { deriveKey } from "./config"
 
 export type Limit = { limit: number; windowSec: number }
@@ -33,9 +34,12 @@ const mongoStore: CounterStore = {
     // TTL 모니터는 1분 주기라 만료 문서가 남아 있을 수 있다
     await rateLimits.deleteOne({ _id, expiresAt: { $lte: now } })
     const update = { $inc: { count: 1 }, $setOnInsert: { expiresAt: new Date(now.getTime() + windowSec * 1000) } }
-    return rateLimits
-      .findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })
-      .catch(() => rateLimits.findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })) // 동시 upsert 중복 키 1회 재시도
+    const upsert = () => rateLimits.findOneAndUpdate({ _id }, update, { upsert: true, returnDocument: "after" })
+    // 동시 upsert가 같은 _id를 넣으면 한쪽이 중복 키로 실패한다. 그때만 1회 재시도(이번엔 갱신이 된다)
+    return upsert().catch((err) => {
+      if (!isDuplicateKey(err)) throw err
+      return upsert()
+    })
   },
   async reset(_id) {
     const { rateLimits } = await collections()

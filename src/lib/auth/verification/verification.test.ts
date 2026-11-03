@@ -30,13 +30,12 @@ describe("검증 코드", () => {
 describe("구현 선택", () => {
   const impls = { off: disabledEmailSender, console: consoleEmailSender }
   it("off면 disabled 구현, 호출 시 에러", async () => {
-    const s = selectImpl("off", impls, false)
+    const s = selectImpl("off", impls)
     expect(s).toBe(disabledEmailSender)
     await expect(s.send({ to: "a@b.co", subject: "s", text: "t" })).rejects.toThrow("verification disabled")
   })
-  it("dev에서 console 선택, production에서 거부", () => {
-    expect(selectImpl("console", impls, false)).toBe(consoleEmailSender)
-    expect(() => selectImpl("console", impls, true)).toThrow()
+  it("console 플래그면 console 구현", () => {
+    expect(selectImpl("console", impls)).toBe(consoleEmailSender)
   })
   it("production + console 플래그는 설정 단계에서 실패", () => {
     const env = { NODE_ENV: "production", DATABASE_URL: "mongodb://h/db", AUTH_SECRET: "s".repeat(32), APP_ORIGIN: "https://a.com", AUTH_EMAIL_VERIFICATION: "console" }
