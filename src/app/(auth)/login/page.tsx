@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { Suspense } from "react"
+import { OAuthButtons } from "@/components/molecules/oauth-buttons"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { oauthButtonList } from "@/lib/auth/oauth/providers"
 import { safeNext } from "@/lib/auth/redirect"
 import { LoginForm } from "./_components/login-form"
 
@@ -19,6 +21,7 @@ const ERRORS: Record<string, string> = {
   oauth_failed: "소셜 로그인에 실패했습니다. 다시 시도해 주세요.",
   oauth_disabled: "아직 준비 중인 로그인 방법입니다.",
   oauth_pending_expired: "가입 대기 시간이 지났습니다. 다시 시도해 주세요.",
+  oauth_link_conflict: "다른 계정에 연결된 소셜 계정입니다.",
 }
 
 export default function LoginPage({ searchParams }: PageProps<"/login">) {
@@ -43,6 +46,7 @@ async function LoginBody({ searchParams }: { searchParams: PageProps<"/login">["
   const str = (v: string | string[] | undefined) => (typeof v === "string" ? v : "")
   const notice = NOTICES[str(params.reason)]
   const error = ERRORS[str(params.error)]
+  const next = safeNext(params.next)
   return (
     <>
       {notice && (
@@ -55,14 +59,15 @@ async function LoginBody({ searchParams }: { searchParams: PageProps<"/login">["
           {error}
         </p>
       )}
-      <LoginForm next={safeNext(params.next)} defaultEmail={str(params.email)} />
+      <LoginForm next={next} defaultEmail={str(params.email)} />
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
         <Separator className="flex-1" />
         또는
         <Separator className="flex-1" />
       </div>
+      <OAuthButtons providers={oauthButtonList()} next={next === "/" ? undefined : next} />
       <p className="text-center text-xs text-muted-foreground">
-        소셜 계정으로 가입하셨다면 위 버튼을 이용하세요. 비밀번호를 잊으셨다면 고객센터로 문의해 주세요.
+        소셜 계정으로 가입하셨다면 위 소셜 로그인 버튼을 이용하세요. 비밀번호를 잊으셨다면 고객센터로 문의해 주세요.
       </p>
     </>
   )

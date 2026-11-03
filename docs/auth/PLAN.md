@@ -389,7 +389,7 @@ export interface IdentityVerifier {
 - "로그인 상태 유지" 체크박스: 넣지 않는다 — refresh가 이미 14일이라 의미가 겹친다. 공용 PC 우려는 로그아웃 버튼 노출로 대응. (질문 8에서 TTL과 함께 결정)
 
 ### OAuth 버튼 (`molecules/oauth-buttons.tsx`)
-- 활성 제공자(`config.ts`가 client id/secret 둘 다 있는 것만)만 렌더 — 키가 없으면 버튼이 사라지므로 dev에서도 깨지지 않는다.
+- ~~활성 제공자만 렌더~~ → **구현(사용자 결정 1)**: 제공자는 Kakao·Google 두 개만 두고(Naver·GitHub 제외), client id/secret이 없으면 버튼을 숨기지 않고 "준비 중" 배지와 함께 비활성(`disabled`)으로 보여준다. 시작·콜백 라우트도 키가 없거나 모르는 제공자면 404/500 대신 `/login?error=oauth_disabled`로 돌려보낸다. 실제 제공자 로그인은 아직 동작시키지 않는다(구조만).
 - 각 제공자 브랜드 가이드의 공식 색·로고 규칙을 따른다(카카오 노랑 버튼 등). 브랜드 로고 SVG는 각 제공자 가이드 배포 자산을 쓴다 — 구현 시 확인. 그 외 버튼 모양은 기존 `Button` `outline` + `rounded-full`.
 - `<a href="/api/auth/oauth/kakao?next=…">`(GET, 상태 변경 없음). 클릭 후 버튼 로딩 표시.
 - 콜백 실패(사용자 취소·state 불일치): `/login?error=oauth_cancelled|oauth_failed` → "카카오 로그인이 취소되었습니다." 등.
