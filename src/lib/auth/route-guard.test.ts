@@ -17,6 +17,8 @@ describe("decideRoute (proxy 분기)", () => {
     // DAL: tokenVersion 불일치 → /login?reason=expired. proxy는 서명만 보므로 signedIn=true
     const atLogin = decideRoute({ ...base, pathname: "/login", search: "?reason=expired", signedIn: true });
     expect(atLogin).toEqual({ type: "next" });
+    // DAL이 실제로 보내는 형태(reason + next)도 그대로 보여준다
+    expect(decideRoute({ ...base, pathname: "/login", search: "?reason=expired&next=%2Fmypage", signedIn: true })).toEqual({ type: "next" });
   });
   it("POST(Server Action)·하위 경로는 통과", () => {
     expect(decideRoute({ ...base, pathname: "/login", method: "POST", signedIn: true })).toEqual({ type: "next" });

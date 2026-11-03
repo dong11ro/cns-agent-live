@@ -47,17 +47,20 @@ export async function getCurrentUser(): Promise<UserDTO | null> {
   return user ? toDTO(user) : null;
 }
 
+// 서버 컴포넌트는 자기 경로를 모르므로 유일한 보호 경로(/mypage)로 복귀시킨다. 보호 경로가 늘면 호출 측에서 next를 넘기게 바꾼다
+const EXPIRED_LOGIN = "/login?reason=expired&next=%2Fmypage";
+
 /** 보호 페이지·Server Action은 이것을 거쳐 데이터에 접근한다. */
 export async function verifySession(): Promise<UserDTO> {
   const user = await getCurrentUser();
-  if (!user) redirect("/login?reason=expired");
+  if (!user) redirect(EXPIRED_LOGIN);
   return user;
 }
 
 /** 비밀번호 확인 등 서버 내부에서 원본 문서가 필요한 액션용. */
 export async function requireUserDoc(): Promise<UserDoc> {
   const user = await getCurrentUserDoc();
-  if (!user) redirect("/login?reason=expired");
+  if (!user) redirect(EXPIRED_LOGIN);
   return user;
 }
 
